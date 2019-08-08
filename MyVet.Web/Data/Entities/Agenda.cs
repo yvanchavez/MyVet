@@ -28,8 +28,8 @@ namespace MyVet.Web.Data.Entities
         public bool IsAvailable { get; set; }
 
         [Display(Name = "Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd H:mm tt}")]
-        public DateTime DateLocal { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
+        public DateTime DateLocal => Date.ToLocalTime();
 
     }
 }
