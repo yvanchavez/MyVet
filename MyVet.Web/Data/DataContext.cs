@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyVet.Web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {
@@ -25,7 +26,7 @@ namespace MyVet.Web.Data
 
         public DbSet<Agenda> Agendas { get; set; }
 
-
+        public DbSet<Manager> Managers { get; set; }
 
     }
 }
