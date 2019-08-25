@@ -21,13 +21,19 @@ namespace MyVet.Web.Controllers
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
 
-        public OwnersController(DataContext context,IUserHelper userHelper,ICombosHelper combosHelper, IConverterHelper converterHelper)
+        public OwnersController(DataContext context,
+            IUserHelper userHelper,
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper)
         {
             _context = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
         }
 
         // GET: Owners
@@ -235,7 +241,7 @@ namespace MyVet.Web.Controllers
 
                 if (model.ImageFile != null)
                 {
-                    path = await UploadImageAsync(model.ImageFile);
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
     
                 }
 
@@ -248,20 +254,6 @@ namespace MyVet.Web.Controllers
             return View(model);
         }
 
-        private async Task<string> UploadImageAsync(IFormFile imageFile)
-        {
-            var guid = Guid.NewGuid().ToString();
-            var file = $"{guid}.jpg";
-            var path = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot\\images\\Pets",
-                file);
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(stream);
-            }
-
-            return $"~/images/Pets/{file}";
-        }
+        
     }
 }
