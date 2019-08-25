@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data;
@@ -234,18 +235,8 @@ namespace MyVet.Web.Controllers
 
                 if (model.ImageFile != null)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot\\images\\Pets",
-                        file);
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/Pets/{file}";
+                    path = await UploadImageAsync(model.ImageFile);
+    
                 }
 
                 var pet = await _converterHelper.ToPetAsync(model, path);
@@ -257,6 +248,20 @@ namespace MyVet.Web.Controllers
             return View(model);
         }
 
-        
+        private async Task<string> UploadImageAsync(IFormFile imageFile)
+        {
+            var guid = Guid.NewGuid().ToString();
+            var file = $"{guid}.jpg";
+            var path = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot\\images\\Pets",
+                file);
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            return $"~/images/Pets/{file}";
+        }
     }
 }
