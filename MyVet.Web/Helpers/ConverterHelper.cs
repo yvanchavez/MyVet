@@ -33,8 +33,32 @@ namespace MyVet.Web.Helpers
                 Remarks = model.Remarks
             };
 
+            if(model.Id != 0)
+            {
+                pet.Id = model.Id;
+            }
+
             return pet;
         }
 
+        public PetViewModel ToPetViewModel(Pet pet)
+        {
+            return new PetViewModel
+            {
+                Agendas = pet.Agendas,
+                Born = pet.Born,
+                Histories = pet.Histories,
+                ImageUrl = pet.ImageUrl,
+                Name = pet.Name,
+                Owner = pet.Owner,
+                PetType = pet.PetType,
+                Race = pet.Race,
+                Remarks = pet.Remarks,
+                Id = pet.Id,
+                OwnerId = pet.Owner.Id,
+                PetTypeId = pet.PetType.Id,
+                PetTypes = _combosHelper.GetComboPetTypes()
+            };
+        }
     }
 }
