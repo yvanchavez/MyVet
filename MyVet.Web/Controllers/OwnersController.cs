@@ -250,7 +250,7 @@ namespace MyVet.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
-
+            model.PetTypes = _combosHelper.GetComboPetTypes();
             return View(model);
         }
 
