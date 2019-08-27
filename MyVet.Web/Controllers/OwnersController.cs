@@ -184,25 +184,26 @@ namespace MyVet.Web.Controllers
             }
 
             var owner = await _context.Owners
+                .Include(o => o.User)
+                .Include(o => o.Pets)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
                 return NotFound();
             }
+            if (owner.Pets.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "El tipo de cliente no puede ser eliminado");
+                return RedirectToAction(nameof(Index));
+            }
 
-            return View(owner);
-        }
-
-        // POST: Owners/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var owner = await _context.Owners.FindAsync(id);
+            await _userHelper.DeleteUserAsync(owner.User.Email);
             _context.Owners.Remove(owner);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        
 
         private bool OwnerExists(int id)
         {
