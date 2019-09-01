@@ -246,7 +246,7 @@ namespace MyVet.Web.Controllers
     
                 }
 
-                var pet = await _converterHelper.ToPetAsync(model, path);
+                var pet = await _converterHelper.ToPetAsync(model, path,true);
                 _context.Pets.Add(pet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
@@ -286,7 +286,7 @@ namespace MyVet.Web.Controllers
                     path = await _imageHelper.UploadImageAsync(model.ImageFile);
                 }
 
-                var pet = await _converterHelper.ToPetAsync(model, path);
+                var pet = await _converterHelper.ToPetAsync(model, path,false);
                 _context.Pets.Update(pet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
